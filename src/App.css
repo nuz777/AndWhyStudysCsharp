@@ -1,6 +1,17 @@
 /* ==========================================================================
-   Global App & Layout Base
+   Global App & Layout Base + CSS Variables
    ========================================================================== */
+
+:root {
+  /* Glassmorphism Header Variables (SauNuz Style con paleta Violeta/C#) */
+  --header-bg: rgba(28, 16, 48, 0.45);
+  --header-bg-scrolled: rgba(20, 11, 38, 0.85);
+  --header-blur: 12px;
+  --header-radius: 18px;
+  --header-border: rgba(255, 255, 255, 0.15);
+  --accent: #c084fc;
+  --accent-hover: #d8b4fe;
+}
 
 .home-page,
 .panel-page,
@@ -13,27 +24,36 @@
 }
 
 /* ==========================================================================
-   Header Styles (White Semi-Transparent with Blur + Hide/Show Toggle)
+   Header Flotante Glassmorphism (Estilo SauNuz adaptado a C# Study Notes)
    ========================================================================== */
 
 .header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.07);
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  max-width: 1240px;
+  margin: 0 auto;
+  height: 64px;
+  border-radius: var(--header-radius, 18px);
+  background: var(--header-bg, rgba(28, 16, 48, 0.45));
+  backdrop-filter: blur(var(--header-blur, 12px)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--header-blur, 12px)) saturate(140%);
+  border: 1px solid var(--header-border, rgba(255, 255, 255, 0.15));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   z-index: 100;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   transform: translateY(0);
 }
 
+.header.scrolled {
+  background: var(--header-bg-scrolled, rgba(20, 11, 38, 0.85));
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
 .header.header-hidden {
-  transform: translateY(-100%);
+  transform: translateY(calc(-100% - 30px));
   pointer-events: none;
 }
 
@@ -46,55 +66,58 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(203, 213, 225, 0.9);
-  color: #1e293b;
+  background: var(--header-bg-scrolled, rgba(20, 11, 38, 0.85));
+  backdrop-filter: blur(var(--header-blur, 12px));
+  -webkit-backdrop-filter: blur(var(--header-blur, 12px));
+  border: 1px solid var(--header-border, rgba(255, 255, 255, 0.2));
+  color: #ffffff;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   padding: 8px 16px;
   border-radius: 9999px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   cursor: pointer;
   animation: fadeIn 0.3s ease;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .btn-show-header-floating:hover {
-  background: #ffffff;
+  background: rgba(45, 22, 85, 0.95);
+  border-color: var(--accent, #c084fc);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  color: #7c3aed;
+  box-shadow: 0 10px 28px rgba(192, 132, 252, 0.35);
+  color: #ffffff;
 }
 
 .btn-icon-subtle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: transparent;
-  border: 1px solid #cbd5e1;
-  color: #475569;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 13px;
   font-weight: 600;
   padding: 7px 12px;
-  border-radius: 8px;
+  border-radius: 9px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .btn-icon-subtle:hover {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .header-container {
-  max-width: 1300px;
+  max-width: 100%;
   height: 100%;
-  margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
 .brand {
@@ -102,21 +125,28 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+}
+
+.brand:hover {
+  opacity: 0.92;
 }
 
 .brand-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  background: linear-gradient(135deg, #7c3aed, #4c1d95);
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #9333ea 0%, #6b21a8 100%);
   color: #ffffff;
   border-radius: 11px;
-  font-family: var(--font-mono);
+  font-family: var(--font-mono, monospace);
   font-weight: 800;
-  font-size: 17px;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+  font-size: 15px;
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .brand-info {
@@ -125,74 +155,131 @@
 }
 
 .brand-title {
-  font-size: 17px;
+  font-size: 15.5px;
   font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.3px;
+  color: #ffffff;
+  letter-spacing: -0.2px;
   line-height: 1.2;
 }
 
 .brand-subtitle {
-  font-size: 12px;
-  color: #64748b;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.65);
   font-weight: 500;
+}
+
+.desktop-nav {
+  display: flex;
+  align-items: center;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-link {
-  font-size: 14px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 13.5px;
   font-weight: 600;
-  color: #334155;
-  transition: color 0.2s ease;
-  padding: 6px 4px;
+  color: rgba(255, 255, 255, 0.78);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.25s ease, opacity 0.25s ease;
+  padding: 8px 4px;
   position: relative;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .nav-link:hover,
 .nav-link.active {
-  color: #7c3aed;
+  color: #ffffff;
 }
 
-.nav-link.active::after {
+.nav-link::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
+  width: 100%;
   height: 2px;
-  background: #7c3aed;
+  background: var(--accent, #c084fc);
   border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 10px rgba(192, 132, 252, 0.65);
 }
 
-.nav-link-btn {
-  background: transparent;
-  font-size: 14px;
-  font-weight: 600;
-  color: #334155;
-  transition: all 0.2s ease;
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+.nav-link-topic {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   padding: 6px 12px;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
+  border-radius: 9px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.nav-link-btn:hover {
-  background: rgba(124, 58, 237, 0.08);
-  color: #7c3aed;
+.nav-link-topic:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.nav-link-topic::after {
+  display: none;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+}
+
+/* Botón Hamburguesa Móvil */
+.btn-mobile-menu {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-mobile-menu:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Menú Móvil Desplegable */
+.mobile-nav-dropdown {
+  display: none;
+}
+
+.mobile-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .btn-primary {
@@ -220,21 +307,27 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  color: #475569;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 13px;
   font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 7px 13px;
+  border-radius: 9px;
   transition: all 0.2s;
   cursor: pointer;
 }
 
+.btn-lock-status:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
 .btn-lock-status.logout:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #ef4444;
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
 }
 
 /* ==========================================================================
@@ -441,15 +534,15 @@
 }
 
 .topic-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(18, 22, 36, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 16px;
   padding: 24px;
   text-align: left;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   display: flex;
   flex-direction: column;
 }
@@ -460,9 +553,9 @@
 
 .clickable-card:hover {
   transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(26, 32, 52, 0.75);
   border-color: rgba(192, 132, 252, 0.5);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .card-icon-wrap {
@@ -1096,35 +1189,35 @@
 }
 
 .note-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(18, 22, 36, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 18px;
   padding: 22px;
   max-height: 275px;
   height: 275px;
   box-sizing: border-box;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
   display: flex;
   flex-direction: column;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   position: relative;
   overflow: hidden;
 }
 
 .note-card:hover {
   transform: translateY(-3px);
-  background: rgba(255, 255, 255, 0.13);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+  background: rgba(26, 32, 52, 0.75);
+  border-color: rgba(192, 132, 252, 0.45);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Highlighted Note Card */
 .note-card.highlighted {
   border-color: rgba(192, 132, 252, 0.75);
-  background: rgba(168, 85, 247, 0.13);
-  box-shadow: 0 0 25px rgba(168, 85, 247, 0.3), 0 10px 30px rgba(0, 0, 0, 0.35);
+  background: rgba(45, 22, 75, 0.65);
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.3), 0 12px 36px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .note-card.highlighted::before {
@@ -1331,9 +1424,9 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(8, 10, 18, 0.65);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1351,24 +1444,24 @@
   max-width: 880px !important;
   width: 94vw !important;
   padding: 24px 30px !important;
-  background: rgba(13, 16, 26, 0.7) !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  background: rgba(14, 18, 30, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
   border-radius: 18px !important;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(24px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
   animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .modal-compact-glass {
   max-width: 530px !important;
   padding: 22px 24px !important;
-  background: rgba(13, 16, 26, 0.62) !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  background: rgba(14, 18, 30, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
   border-radius: 18px !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
-  backdrop-filter: blur(20px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
   animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -2956,9 +3049,9 @@
    ========================================================================== */
 
 .windows-backdrop {
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(8, 10, 18, 0.7);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
 }
 
 .windows-window {
@@ -2966,12 +3059,12 @@
   max-width: 860px;
   min-height: 480px;
   max-height: 88vh;
-  background: rgba(15, 18, 28, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(14, 18, 30, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 12px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -3577,7 +3670,95 @@
 }
 
 /* ==========================================================================
-   Mobile / Celular: Cards 2x2, Header Optimizado & Cero Lag
+   Responsive Navigation & Mobile Hamburger Menu
+   ========================================================================== */
+@media (max-width: 860px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .btn-mobile-menu {
+    display: inline-flex;
+  }
+
+  .mobile-nav-dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    background: var(--header-bg-scrolled, rgba(20, 11, 38, 0.95));
+    backdrop-filter: blur(var(--header-blur, 14px)) saturate(140%);
+    -webkit-backdrop-filter: blur(var(--header-blur, 14px)) saturate(140%);
+    border: 1px solid var(--header-border, rgba(255, 255, 255, 0.16));
+    border-radius: var(--header-radius, 18px);
+    padding: 14px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+    animation: slideDownMobileNav 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    z-index: 105;
+  }
+
+  .mobile-nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono, monospace);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.82);
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active {
+    background: rgba(192, 132, 252, 0.16);
+    border-color: rgba(192, 132, 252, 0.45);
+    color: #ffffff;
+  }
+
+  .mobile-nav-link.active {
+    border-left: 3px solid var(--accent, #c084fc);
+  }
+
+  .mobile-nav-btn {
+    color: #ffffff;
+  }
+}
+
+@keyframes slideDownMobileNav {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Mobile / Celular: Cards 2x2, Header Flotante SauNuz & Optimización
    ========================================================================== */
 @media (max-width: 640px) {
   /* 1. Fondo optimizado: Eliminar background-attachment: fixed que congela el scroll en celular */
@@ -3590,18 +3771,12 @@
     background-size: cover !important;
   }
 
-  /* 2. Cero Lag: Quitar filtros backdrop-filter Gaussian Blur en celular */
-  .header,
-  .note-card,
-  .topic-card,
+  /* 2. Optimización en celular: Mantener blur borroso en cards y modales */
   .hero-overlay,
   .panel-overlay,
-  .btn-show-header-floating,
   .search-input-field,
   .priority-filter-tabs,
   .btn-cloud-status,
-  .modal-window,
-  .modal-backdrop,
   .topic-tab-btn,
   .badge-tag,
   .hero-priority-legend {
@@ -3609,19 +3784,36 @@
     -webkit-backdrop-filter: none !important;
   }
 
-  /* 3. Cero Lag: Desactivar animaciones y transiciones lentas en celular */
-  *,
-  *::before,
-  *::after {
-    transition: none !important;
-    animation: none !important;
+  .modal-backdrop,
+  .windows-backdrop {
+    backdrop-filter: blur(12px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
   }
 
-  /* 4. Header ultra-limpio y compacto en celular */
+  .modal-horizontal-glass,
+  .modal-compact-glass,
+  .windows-window {
+    backdrop-filter: blur(16px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  }
+
+  /* 3. Header flotante glassmorphism en celular (SauNuz Style) */
   .header {
-    height: 56px !important;
-    background: rgba(255, 255, 255, 0.98) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    top: 12px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: calc(100% - 24px) !important;
+    height: 58px !important;
+    border-radius: var(--header-radius, 18px) !important;
+    background: var(--header-bg, rgba(28, 16, 48, 0.65)) !important;
+    backdrop-filter: blur(var(--header-blur, 12px)) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(var(--header-blur, 12px)) saturate(140%) !important;
+    border: 1px solid var(--header-border, rgba(255, 255, 255, 0.15)) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .header.scrolled {
+    background: var(--header-bg-scrolled, rgba(20, 11, 38, 0.9)) !important;
   }
 
   .header-container {
@@ -3661,7 +3853,10 @@
 
   .btn-icon-subtle {
     padding: 6px 8px !important;
-    border-radius: 7px !important;
+    border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    color: rgba(255, 255, 255, 0.85) !important;
   }
 
   .header .btn-primary,
@@ -3673,18 +3868,22 @@
   }
 
   .btn-show-header-floating {
-    top: 10px !important;
+    top: 12px !important;
     right: 12px !important;
     padding: 6px 12px !important;
     font-size: 11.5px !important;
   }
 
+  .panel-content {
+    padding-top: 88px !important;
+  }
+
   .panel-page {
-    padding-top: 56px !important;
+    padding-top: 0 !important;
   }
 
   .hero-section {
-    padding-top: 76px !important;
+    padding-top: 92px !important;
   }
 
   /* Grilla 2x2 de tarjetas de notas */
@@ -3693,20 +3892,22 @@
     gap: 10px !important;
   }
 
-  /* Tarjeta de nota optimizada para 2x2 en celular sin blur */
+  /* Tarjeta de nota 2x2 en celular con efecto borroso glassmorphism */
   .note-card {
     padding: 12px 10px !important;
     height: 275px !important;
     max-height: 275px !important;
     border-radius: 14px !important;
-    background: #111625 !important;
-    border: 1px solid rgba(255, 255, 255, 0.14) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    background: rgba(18, 22, 36, 0.72) !important;
+    backdrop-filter: blur(12px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45) !important;
   }
 
   .note-card.highlighted {
-    background: #1a1630 !important;
-    border-color: rgba(192, 132, 252, 0.6) !important;
+    background: rgba(45, 22, 75, 0.72) !important;
+    border-color: rgba(192, 132, 252, 0.65) !important;
   }
 
   .note-card-header {
