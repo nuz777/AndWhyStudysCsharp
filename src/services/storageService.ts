@@ -21,11 +21,18 @@ export interface CustomCloudConfig {
 export function getCustomCloudConfig(): CustomCloudConfig | null {
   try {
     const saved = localStorage.getItem(STORAGE_KEYS.CUSTOM_CLOUD)
-    if (!saved) return null
-    return JSON.parse(saved)
+    if (saved) return JSON.parse(saved)
   } catch {
-    return null
+    // fallback
   }
+
+  const envUrl = import.meta.env.VITE_KV_REST_API_URL
+  const envToken = import.meta.env.VITE_KV_REST_API_TOKEN
+  if (envUrl && envToken) {
+    return { url: envUrl, token: envToken }
+  }
+
+  return null
 }
 
 export function setCustomCloudConfig(config: CustomCloudConfig | null) {
