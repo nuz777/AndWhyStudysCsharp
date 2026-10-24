@@ -175,18 +175,18 @@ export function NoteDetailModal({
                       </span>
                       <button
                         type="button"
-                        className="windows-copy-btn"
+                        className={`windows-copy-btn ${isCopied ? 'copied' : ''}`}
                         onClick={() => handleCopyCode(block.id, block.code)}
                         title="Copiar código al portapapeles"
                       >
                         {isCopied ? (
                           <>
-                            <Check size={14} color="#4ade80" />
-                            <span style={{ color: '#4ade80' }}>Copiado</span>
+                            <Check size={14} className="copy-icon-success" />
+                            <span>¡Copiado!</span>
                           </>
                         ) : (
                           <>
-                            <Copy size={14} />
+                            <Copy size={13} />
                             <span>Copiar</span>
                           </>
                         )}
@@ -209,32 +209,37 @@ export function NoteDetailModal({
           <div className="windows-status-left">
             <button
               type="button"
-              className={`action-btn highlight-btn ${note.isHighlighted ? 'active' : ''}`}
+              className={`detail-action-btn detail-btn-highlight ${note.isHighlighted ? 'active' : ''}`}
               onClick={() => onToggleHighlight(note.id)}
+              title={note.isHighlighted ? 'Quitar resalte de la nota' : 'Resaltar esta nota'}
             >
-              <Sparkles size={14} />
-              <span>{note.isHighlighted ? 'Quitar Resalte' : 'Resaltar Nota'}</span>
+              <Sparkles size={15} />
+              <span>{note.isHighlighted ? 'Nota Resaltada' : 'Resaltar Nota'}</span>
             </button>
           </div>
 
           <div className="windows-status-right">
             <button
               type="button"
-              className="btn-secondary"
+              className="detail-action-btn detail-btn-edit"
               onClick={() => {
                 handleClose()
                 onEdit(note)
               }}
+              title="Editar esta nota"
             >
-              <Pencil size={14} />
+              <Pencil size={15} />
               <span>Editar Nota</span>
             </button>
+
             <button
               type="button"
-              className="btn-primary"
+              className="detail-action-btn detail-btn-close"
               onClick={handleClose}
+              title="Cerrar vista previa"
             >
-              Cerrar Vista
+              <span>Cerrar</span>
+              <X size={15} />
             </button>
           </div>
         </div>
