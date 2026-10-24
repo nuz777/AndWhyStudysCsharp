@@ -7,7 +7,7 @@ Plataforma interactiva para documentar, estudiar y consultar apuntes y conceptos
 ## 🔑 Credenciales de Acceso
 
 - **Ruta del Panel:** `/panel`
-- **Contraseña:** `ivanDavid2007`
+- **Contraseña:** ``
 
 ---
 
