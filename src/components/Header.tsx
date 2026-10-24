@@ -112,9 +112,10 @@ export function Header({ onOpenCreateNote, onOpenCreateTopic }: HeaderProps) {
                     className="btn-primary"
                     type="button"
                     onClick={onOpenCreateNote}
+                    title="Nueva Nota"
                   >
                     <Plus size={16} />
-                    <span>Nueva Nota</span>
+                    <span className="header-btn-text">Nueva Nota</span>
                   </button>
                 )}
                 <button
@@ -124,7 +125,7 @@ export function Header({ onOpenCreateNote, onOpenCreateTopic }: HeaderProps) {
                   title="Cerrar sesión y bloquear panel"
                 >
                   <LogOut size={15} />
-                  <span>Bloquear</span>
+                  <span className="header-btn-text">Bloquear</span>
                 </button>
               </>
             ) : (
@@ -134,18 +135,20 @@ export function Header({ onOpenCreateNote, onOpenCreateTopic }: HeaderProps) {
                     type="button"
                     className="btn-primary"
                     onClick={() => navigate('/panel')}
+                    title="Ir al Panel"
                   >
                     <Unlock size={15} />
-                    <span>Ir al Panel</span>
+                    <span className="header-btn-text">Ir al Panel</span>
                   </button>
                 ) : (
                   <button
                     type="button"
                     className="btn-primary"
                     onClick={handleAccess}
+                    title="Ingresar con contraseña"
                   >
                     <Lock size={15} />
-                    <span>Ingresar</span>
+                    <span className="header-btn-text">Ingresar</span>
                   </button>
                 )}
               </>

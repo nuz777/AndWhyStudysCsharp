@@ -3122,21 +3122,136 @@
 }
 
 /* ==========================================================================
-   Mobile / Celular: Cards 2x2 (2 columnas obligatorias)
+   Mobile / Celular: Cards 2x2, Header Optimizado & Cero Lag
    ========================================================================== */
 @media (max-width: 640px) {
+  /* 1. Fondo optimizado: Eliminar background-attachment: fixed que congela el scroll en celular */
+  .home-page,
+  .panel-page,
+  .panel-page-locked,
+  .hero-section {
+    background-attachment: scroll !important;
+    background-position: center top !important;
+    background-size: cover !important;
+  }
+
+  /* 2. Cero Lag: Quitar filtros backdrop-filter Gaussian Blur en celular */
+  .header,
+  .note-card,
+  .topic-card,
+  .hero-overlay,
+  .panel-overlay,
+  .btn-show-header-floating,
+  .search-input-field,
+  .priority-filter-tabs,
+  .btn-cloud-status,
+  .modal-window,
+  .modal-backdrop,
+  .topic-tab-btn,
+  .badge-tag,
+  .hero-priority-legend {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* 3. Cero Lag: Desactivar animaciones y transiciones lentas en celular */
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  /* 4. Header ultra-limpio y compacto en celular */
+  .header {
+    height: 56px !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .header-container {
+    padding: 0 12px !important;
+    height: 100% !important;
+  }
+
+  .brand {
+    gap: 8px !important;
+  }
+
+  .brand-badge {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 13.5px !important;
+    border-radius: 8px !important;
+  }
+
+  .brand-title {
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Ocultar textos extensos en el header móvil */
+  .brand-subtitle,
+  .hide-btn-label,
+  .header-btn-text {
+    display: none !important;
+  }
+
+  .header-actions {
+    gap: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .btn-icon-subtle {
+    padding: 6px 8px !important;
+    border-radius: 7px !important;
+  }
+
+  .header .btn-primary,
+  .header .btn-lock-status {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+    gap: 0 !important;
+  }
+
+  .btn-show-header-floating {
+    top: 10px !important;
+    right: 12px !important;
+    padding: 6px 12px !important;
+    font-size: 11.5px !important;
+  }
+
+  .panel-page {
+    padding-top: 56px !important;
+  }
+
+  .hero-section {
+    padding-top: 76px !important;
+  }
+
   /* Grilla 2x2 de tarjetas de notas */
   .notes-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px !important;
   }
 
-  /* Tarjeta de nota optimizada para 2x2 en celular */
+  /* Tarjeta de nota optimizada para 2x2 en celular sin blur */
   .note-card {
     padding: 12px 10px !important;
     height: 275px !important;
     max-height: 275px !important;
     border-radius: 14px !important;
+    background: #111625 !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .note-card.highlighted {
+    background: #1a1630 !important;
+    border-color: rgba(192, 132, 252, 0.6) !important;
   }
 
   .note-card-header {
@@ -3203,6 +3318,7 @@
     max-height: 75px !important;
     margin-bottom: 4px !important;
     border-radius: 6px !important;
+    background: #090d16 !important;
   }
 
   .note-card .note-code-bar {
@@ -3259,6 +3375,9 @@
   .hero-cards-grid .topic-card {
     padding: 14px 12px !important;
     border-radius: 12px !important;
+    background: #111625 !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
   }
 
   .hero-cards-grid .topic-card:nth-child(3) {
