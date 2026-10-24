@@ -3096,8 +3096,10 @@
     grid-template-columns: 1fr;
   }
 
+  /* Tarjetas 2 columnas en pantallas medianas y tablets */
   .notes-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 
   .section-header {
@@ -3110,7 +3112,261 @@
   }
 
   .hero-cards-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .hero-cards-grid .topic-card:nth-child(3) {
+    grid-column: span 2;
+  }
+}
+
+/* ==========================================================================
+   Mobile / Celular: Cards 2x2 (2 columnas obligatorias)
+   ========================================================================== */
+@media (max-width: 640px) {
+  /* Grilla 2x2 de tarjetas de notas */
+  .notes-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  /* Tarjeta de nota optimizada para 2x2 en celular */
+  .note-card {
+    padding: 12px 10px !important;
+    height: 275px !important;
+    max-height: 275px !important;
+    border-radius: 14px !important;
+  }
+
+  .note-card-header {
+    margin-bottom: 8px !important;
+    gap: 4px !important;
+  }
+
+  /* Insignia de prioridad compacta */
+  .note-card .priority-badge {
+    padding: 2px 5px !important;
+    font-size: 10.5px !important;
+    gap: 3px !important;
+  }
+
+  .note-card .priority-badge svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  /* Acciones de la tarjeta en celular */
+  .note-card-actions {
+    gap: 3px !important;
+  }
+
+  .note-card .action-btn {
+    padding: 3px 5px !important;
+    font-size: 11px !important;
+    border-radius: 5px !important;
+  }
+
+  .note-card .action-btn svg {
+    width: 13px !important;
+    height: 13px !important;
+  }
+
+  /* Ocultar texto "Resaltar" en celular para mantener botones compactos */
+  .note-card .highlight-btn span {
+    display: none !important;
+  }
+
+  /* Título de la tarjeta en 2x2 */
+  .note-card-title {
+    font-size: 13.5px !important;
+    margin-bottom: 5px !important;
+    line-height: 1.25 !important;
+  }
+
+  /* Contenido y bloques de texto en 2x2 */
+  .note-card-body {
+    font-size: 11.5px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 4px !important;
+  }
+
+  .note-card-body h2,
+  .note-card-body h3,
+  .rendered-subtitle {
+    font-size: 12px !important;
+    margin: 3px 0 !important;
+  }
+
+  /* Bloque de código en 2x2 */
+  .note-card .note-code-wrapper {
+    max-height: 75px !important;
+    margin-bottom: 4px !important;
+    border-radius: 6px !important;
+  }
+
+  .note-card .note-code-bar {
+    padding: 3px 6px !important;
+    font-size: 9.5px !important;
+  }
+
+  .note-card .code-lang-tag {
+    font-size: 9.5px !important;
+  }
+
+  .note-card .copy-code-btn {
+    font-size: 9.5px !important;
+    padding: 1px 4px !important;
+  }
+
+  .note-card pre,
+  .note-card .note-code-block {
+    padding: 4px 6px !important;
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Footer de la tarjeta */
+  .note-card-footer {
+    padding-top: 6px !important;
+  }
+
+  .topic-tag-pill {
+    font-size: 10px !important;
+    padding: 2px 5px !important;
+    max-width: 80px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .open-detail-hint {
+    font-size: 10px !important;
+    gap: 3px !important;
+  }
+
+  .open-detail-hint span {
+    display: none !important;
+  }
+
+  /* Grilla del Hero en celular (2x2) */
+  .hero-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    margin-top: 24px !important;
+  }
+
+  .hero-cards-grid .topic-card {
+    padding: 14px 12px !important;
+    border-radius: 12px !important;
+  }
+
+  .hero-cards-grid .topic-card:nth-child(3) {
+    grid-column: span 2 !important;
+  }
+
+  .topic-card .card-icon-wrap {
+    width: 32px !important;
+    height: 32px !important;
+    margin-bottom: 8px !important;
+    border-radius: 8px !important;
+  }
+
+  .topic-card .card-icon-wrap svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .topic-card h3 {
+    font-size: 14px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .topic-card p {
+    font-size: 11.5px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Ajustes generales del Panel en celular */
+  .panel-container {
+    padding: 0 10px !important;
+  }
+
+  .section-heading {
+    font-size: 24px !important;
+  }
+
+  .section-subheading {
+    font-size: 12.5px !important;
+  }
+
+  .section-header-actions {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .btn-create-topic,
+  .btn-create-note,
+  .btn-cloud-status {
+    padding: 7px 11px !important;
+    font-size: 12px !important;
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+  }
+
+  .filters-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .search-bar-wrap {
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  .filters-group {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .priority-filter-tabs {
+    flex: 1 !important;
+    justify-content: space-between !important;
+    overflow-x: auto !important;
+  }
+
+  .filter-tab {
+    padding: 4px 8px !important;
+    font-size: 11.5px !important;
+  }
+
+  /* Modal de crear nota responsivo en celular */
+  .modal-window {
+    width: 96% !important;
+    max-width: 96% !important;
+    margin: 8px !important;
+  }
+
+  .modal-editor-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Pantallas súper compactas (<= 380px) */
+@media (max-width: 380px) {
+  .notes-grid {
+    gap: 6px !important;
+  }
+
+  .note-card {
+    padding: 10px 8px !important;
+  }
+
+  .hero-cards-grid {
+    gap: 6px !important;
   }
 }
 
