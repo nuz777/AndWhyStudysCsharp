@@ -3,6 +3,7 @@ import { Sparkles, Trash2, Copy, Check, Code, Pencil, Maximize2 } from 'lucide-r
 import type { Note, Topic } from '../types/notes'
 import { getNoteBlocks } from '../types/notes'
 import { renderFormattedContent } from '../utils/formatContent'
+import { CSharpCodeBlock } from '../utils/CSharpCodeBlock'
 import { PriorityBadge } from './PriorityBadge'
 
 interface NoteCardProps {
@@ -123,7 +124,7 @@ export function NoteCard({
                   </button>
                 </div>
                 <pre className="note-code-block">
-                  <code>{block.code}</code>
+                  <CSharpCodeBlock code={block.code} />
                 </pre>
               </div>
             )

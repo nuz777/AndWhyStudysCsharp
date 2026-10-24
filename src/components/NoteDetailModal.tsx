@@ -13,6 +13,7 @@ import {
 import type { Note, Topic } from '../types/notes'
 import { getNoteBlocks } from '../types/notes'
 import { renderFormattedContent } from '../utils/formatContent'
+import { CSharpCodeBlock } from '../utils/CSharpCodeBlock'
 import { PriorityBadge } from './PriorityBadge'
 
 interface NoteDetailModalProps {
@@ -193,7 +194,7 @@ export function NoteDetailModal({
                       </button>
                     </div>
                     <pre className="windows-code-pre">
-                      <code>{block.code}</code>
+                      <CSharpCodeBlock code={block.code} showLineNumbers={true} />
                     </pre>
                   </div>
                 )

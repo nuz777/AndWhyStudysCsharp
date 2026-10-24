@@ -18,6 +18,7 @@ import {
 import type { Note, Topic, PriorityLevel, NoteBlock } from '../types/notes'
 import { PRIORITY_CONFIG, getNoteBlocks } from '../types/notes'
 import { renderFormattedContent } from '../utils/formatContent'
+import { CSharpCodeBlock } from '../utils/CSharpCodeBlock'
 
 interface NoteModalProps {
   isOpen: boolean
@@ -578,12 +579,24 @@ export function NoteModal({
                       </div>
 
                       <textarea
-                        rows={5}
+                        rows={4}
                         value={block.code}
                         onChange={(e) => handleUpdateCode(block.id, e.target.value)}
                         placeholder="// Escribe o pega tu código C# aquí..."
                         className="ai-block-code-textarea"
                       />
+
+                      {block.code.trim() && (
+                        <div className="modal-code-live-preview">
+                          <div className="modal-code-live-header">
+                            <Sparkles size={12} className="sparkle-cyan" />
+                            <span>Vista resaltada C# (Clases, métodos, tipos):</span>
+                          </div>
+                          <div className="modal-code-live-box">
+                            <CSharpCodeBlock code={block.code} showLineNumbers={false} />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )
                 }
