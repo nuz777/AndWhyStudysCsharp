@@ -1667,6 +1667,103 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
+/* ==========================================================================
+   Live Preview en tiempo real dentro del editor de notas
+   ========================================================================== */
+
+.format-btn-bold {
+  color: #f8fafc !important;
+  font-weight: 800;
+}
+
+.format-btn-bold span {
+  font-size: 11.5px;
+  margin-left: 2px;
+}
+
+.live-preview-container {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.28);
+  padding: 10px 14px 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.live-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.live-preview-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #c084fc;
+  font-family: var(--font-mono);
+}
+
+.live-preview-badge .sparkle-cyan {
+  color: #38bdf8;
+}
+
+.live-preview-hint {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.live-preview-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #f1f5f9;
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 38px;
+}
+
+.live-preview-box .rendered-subtitle {
+  font-size: 14.5px;
+  margin: 6px 0 4px 0;
+  color: #c084fc;
+}
+
+.live-preview-box .rendered-bold {
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.live-preview-box .rendered-inline-code {
+  background: rgba(168, 85, 247, 0.25);
+  color: #e9d5ff;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.live-preview-empty {
+  font-size: 12px;
+  color: #64748b;
+  font-style: italic;
+  padding: 4px 2px;
+}
+
+.live-preview-empty .sample-bold {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.live-preview-empty .sample-sub {
+  color: #c084fc;
+  font-weight: 600;
+}
+
 .ai-block-code-textarea {
   width: 100%;
   padding: 12px 14px;

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import {
   X,
   Sparkles,
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import type { Note, Topic, PriorityLevel, NoteBlock } from '../types/notes'
 import { PRIORITY_CONFIG, getNoteBlocks } from '../types/notes'
+import { renderFormattedContent } from '../utils/formatContent'
 
 interface NoteModalProps {
   isOpen: boolean
@@ -66,6 +67,7 @@ export function NoteModal({
   })
 
   const [isClosing, setIsClosing] = useState(false)
+  const textareaRefs = useRef<Record<string, HTMLTextAreaElement | null>>({})
 
   const resetForm = () => {
     setTitle('')
@@ -141,26 +143,133 @@ export function NoteModal({
     )
   }
 
-  // Insertar formato markdown en un bloque de texto
-  const handleInsertFormatInBlock = (
-    id: string,
-    before: string,
-    after: string = '',
-    defaultText: string = ''
+  // Aplicar formato en tiempo real al texto seleccionado
+  const handleApplyFormat = (
+    blockId: string,
+    formatType: 'bold' | 'subtitle' | 'list' | 'code'
   ) => {
-    setBlocks((prev) =>
-      prev.map((b) => {
-        if (b.id === id && b.type === 'text') {
-          const currentText = b.text
-          const separator = currentText.length > 0 && !currentText.endsWith('\n') ? '\n\n' : ''
-          return {
-            ...b,
-            text: currentText + separator + before + defaultText + after
+    const textarea = textareaRefs.current[blockId]
+    const currentBlock = blocks.find((b) => b.id === blockId && b.type === 'text')
+    if (!currentBlock || currentBlock.type !== 'text') return
+
+    const val = currentBlock.text
+
+    if (!textarea) {
+      if (formatType === 'bold') handleUpdateText(blockId, val + (val ? ' ' : '') + '**Texto**')
+      if (formatType === 'subtitle') handleUpdateText(blockId, val + (val ? '\n\n' : '') + '## Subtítulo')
+      if (formatType === 'list') handleUpdateText(blockId, val + (val ? '\n' : '') + '- Elemento')
+      if (formatType === 'code') handleUpdateText(blockId, val + (val ? ' ' : '') + '`código`')
+      return
+    }
+
+    const start = textarea.selectionStart ?? val.length
+    const end = textarea.selectionEnd ?? val.length
+    const selectedText = val.substring(start, end)
+
+    let replacement = ''
+    let newCursorStart = start
+    let newCursorEnd = end
+
+    switch (formatType) {
+      case 'bold': {
+        if (selectedText.length > 0) {
+          if (
+            selectedText.startsWith('**') &&
+            selectedText.endsWith('**') &&
+            selectedText.length >= 4
+          ) {
+            replacement = selectedText.slice(2, -2)
+            newCursorStart = start
+            newCursorEnd = start + replacement.length
+          } else {
+            replacement = `**${selectedText}**`
+            newCursorStart = start
+            newCursorEnd = start + replacement.length
           }
+        } else {
+          replacement = '****'
+          newCursorStart = start + 2
+          newCursorEnd = start + 2
         }
-        return b
-      })
-    )
+        break
+      }
+      case 'subtitle': {
+        if (selectedText.length > 0) {
+          const clean = selectedText.replace(/^##\s*/, '')
+          const needsNewlineBefore = start > 0 && val[start - 1] !== '\n'
+          const needsNewlineAfter = end < val.length && val[end] !== '\n'
+          const prefix = needsNewlineBefore ? '\n## ' : '## '
+          const suffix = needsNewlineAfter ? '\n' : ''
+          replacement = `${prefix}${clean}${suffix}`
+          newCursorStart = start
+          newCursorEnd = start + replacement.length
+        } else {
+          const needsNewline = start > 0 && val[start - 1] !== '\n'
+          replacement = needsNewline ? '\n## ' : '## '
+          newCursorStart = start + replacement.length
+          newCursorEnd = start + replacement.length
+        }
+        break
+      }
+      case 'list': {
+        if (selectedText.length > 0) {
+          const lines = selectedText.split('\n')
+          const formatted = lines
+            .map((l) => (l.startsWith('- ') ? l.replace(/^- \s*/, '') : `- ${l}`))
+            .join('\n')
+          replacement = formatted
+          newCursorStart = start
+          newCursorEnd = start + replacement.length
+        } else {
+          const needsNewline = start > 0 && val[start - 1] !== '\n'
+          replacement = needsNewline ? '\n- ' : '- '
+          newCursorStart = start + replacement.length
+          newCursorEnd = start + replacement.length
+        }
+        break
+      }
+      case 'code': {
+        if (selectedText.length > 0) {
+          if (
+            selectedText.startsWith('`') &&
+            selectedText.endsWith('`') &&
+            selectedText.length >= 2
+          ) {
+            replacement = selectedText.slice(1, -1)
+            newCursorStart = start
+            newCursorEnd = start + replacement.length
+          } else {
+            replacement = `\`${selectedText}\``
+            newCursorStart = start
+            newCursorEnd = start + replacement.length
+          }
+        } else {
+          replacement = '``'
+          newCursorStart = start + 1
+          newCursorEnd = start + 1
+        }
+        break
+      }
+    }
+
+    const newText = val.substring(0, start) + replacement + val.substring(end)
+    handleUpdateText(blockId, newText)
+
+    // Restaurar foco y selección
+    requestAnimationFrame(() => {
+      textarea.focus()
+      textarea.setSelectionRange(newCursorStart, newCursorEnd)
+    })
+  }
+
+  const handleTextareaKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+    blockId: string
+  ) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+      e.preventDefault()
+      handleApplyFormat(blockId, 'bold')
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -347,10 +456,8 @@ export function NoteModal({
                           <button
                             type="button"
                             className="format-btn format-btn-sub"
-                            onClick={() =>
-                              handleInsertFormatInBlock(block.id, '## ', '\n', '')
-                            }
-                            title="Insertar subtítulo en este bloque"
+                            onClick={() => handleApplyFormat(block.id, 'subtitle')}
+                            title="Aplica Subtítulo (##) al texto seleccionado o crea uno nuevo"
                           >
                             <Heading2 size={12} />
                             <span>+ Subtítulo</span>
@@ -358,31 +465,26 @@ export function NoteModal({
                           <button
                             type="button"
                             className="format-btn"
-                            onClick={() =>
-                              handleInsertFormatInBlock(block.id, '- ', '\n', '')
-                            }
-                            title="Insertar viñeta"
+                            onClick={() => handleApplyFormat(block.id, 'list')}
+                            title="Aplica Viñeta (-) a las líneas seleccionadas"
                           >
                             <List size={12} />
                             <span>Viñeta</span>
                           </button>
                           <button
                             type="button"
-                            className="format-btn"
-                            onClick={() =>
-                              handleInsertFormatInBlock(block.id, '**', '**', '')
-                            }
-                            title="Texto en negrita"
+                            className="format-btn format-btn-bold"
+                            onClick={() => handleApplyFormat(block.id, 'bold')}
+                            title="Aplica Negrita (**) al texto seleccionado (Ctrl+B)"
                           >
                             <Bold size={12} />
+                            <span>Negrita</span>
                           </button>
                           <button
                             type="button"
                             className="format-btn"
-                            onClick={() =>
-                              handleInsertFormatInBlock(block.id, '`', '`', '')
-                            }
-                            title="Código en línea"
+                            onClick={() => handleApplyFormat(block.id, 'code')}
+                            title="Aplica Código en línea (`) al texto seleccionado"
                           >
                             <Code size={12} />
                           </button>
@@ -400,13 +502,45 @@ export function NoteModal({
                         </div>
                       </div>
 
+                      {/* Input de texto con Ref y soporte para selección */}
                       <textarea
-                        rows={4}
+                        ref={(el) => {
+                          textareaRefs.current[block.id] = el
+                        }}
+                        rows={3}
                         value={block.text}
                         onChange={(e) => handleUpdateText(block.id, e.target.value)}
-                        placeholder="Escribe tu apunte aquí..."
+                        onKeyDown={(e) => handleTextareaKeyDown(e, block.id)}
+                        placeholder="Escribe aquí... Selecciona cualquier texto con cursor o Ctrl+A y dale a 'Negrita' o '+ Subtítulo'"
                         className="ai-block-textarea"
                       />
+
+                      {/* Contenedor de Vista en Vivo en tiempo real */}
+                      <div className="live-preview-container">
+                        <div className="live-preview-header">
+                          <div className="live-preview-badge">
+                            <Sparkles size={13} className="sparkle-cyan" />
+                            <span>Vista en Vivo (Resultado Real):</span>
+                          </div>
+                          <span className="live-preview-hint">
+                            {block.text.trim()
+                              ? 'Reflejando cambios al instante'
+                              : 'Escribe o formatea arriba para previsualizar aquí'}
+                          </span>
+                        </div>
+
+                        <div className="live-preview-box">
+                          {block.text.trim() ? (
+                            renderFormattedContent(block.text)
+                          ) : (
+                            <div className="live-preview-empty">
+                              <span>Prueba a seleccionar texto y presionar </span>
+                              <strong className="sample-bold">Negrita</strong> o{' '}
+                              <span className="sample-sub">## Subtítulo</span> para ver cómo queda en vivo.
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   )
                 }
