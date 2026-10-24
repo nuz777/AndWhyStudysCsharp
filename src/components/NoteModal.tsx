@@ -67,12 +67,26 @@ export function NoteModal({
 
   const [isClosing, setIsClosing] = useState(false)
 
+  const resetForm = () => {
+    setTitle('')
+    setBlocks([
+      {
+        id: `block-${Date.now()}`,
+        type: 'text',
+        text: ''
+      }
+    ])
+    setIsHighlighted(false)
+    setPriority('fuerte')
+  }
+
   if (!isOpen && !isClosing) return null
 
   const handleClose = () => {
     setIsClosing(true)
     setTimeout(() => {
       setIsClosing(false)
+      resetForm()
       onClose()
     }, 220)
   }
@@ -185,6 +199,7 @@ export function NoteModal({
         isHighlighted
       })
       setIsClosing(false)
+      resetForm()
     }, 200)
   }
 

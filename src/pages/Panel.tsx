@@ -139,6 +139,7 @@ export function Panel() {
 
   // Modals state
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false)
+  const [modalInstanceId, setModalInstanceId] = useState(0)
   const [editingNote, setEditingNote] = useState<Note | null>(null)
   const [deletingNote, setDeletingNote] = useState<Note | null>(null)
   const [detailNote, setDetailNote] = useState<Note | null>(null)
@@ -168,11 +169,13 @@ export function Panel() {
 
   const handleOpenEdit = (note: Note) => {
     setEditingNote(note)
+    setModalInstanceId((prev) => prev + 1)
     setIsNoteModalOpen(true)
   }
 
   const handleOpenCreate = () => {
     setEditingNote(null)
+    setModalInstanceId((prev) => prev + 1)
     setIsNoteModalOpen(true)
   }
 
@@ -548,19 +551,21 @@ export function Panel() {
       />
 
       {/* Modal de Creación / Edición de Nota */}
-      <NoteModal
-        key={editingNote ? editingNote.id : 'new-note'}
-        isOpen={isNoteModalOpen}
-        topics={topics}
-        selectedTopicId={selectedTopicId === 'all' ? (topics[0]?.id ?? '') : selectedTopicId}
-        initialData={editingNote}
-        onClose={() => {
-          setIsNoteModalOpen(false)
-          setEditingNote(null)
-        }}
-        onSave={handleSaveNote}
-        onOpenCreateTopic={() => setIsTopicModalOpen(true)}
-      />
+      {isNoteModalOpen && (
+        <NoteModal
+          key={editingNote ? `edit-${editingNote.id}-${modalInstanceId}` : `new-note-${modalInstanceId}`}
+          isOpen={isNoteModalOpen}
+          topics={topics}
+          selectedTopicId={selectedTopicId === 'all' ? (topics[0]?.id ?? '') : selectedTopicId}
+          initialData={editingNote}
+          onClose={() => {
+            setIsNoteModalOpen(false)
+            setEditingNote(null)
+          }}
+          onSave={handleSaveNote}
+          onOpenCreateTopic={() => setIsTopicModalOpen(true)}
+        />
+      )}
 
       {/* Modal de Confirmación para Eliminar Nota */}
       <ConfirmDeleteModal
