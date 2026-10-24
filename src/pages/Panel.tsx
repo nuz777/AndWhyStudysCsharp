@@ -11,7 +11,8 @@ import {
   Lock,
   Trash2,
   CloudCheck,
-  CloudOff
+  CloudOff,
+  Compass
 } from 'lucide-react'
 import type { Topic, Note, PriorityLevel } from '../types/notes'
 import { Header } from '../components/Header'
@@ -35,7 +36,7 @@ import {
 import type { CloudStatusInfo } from '../services/storageService'
 
 export function Panel() {
-  const { isAuthenticated, openAccessModal } = useAuth()
+  const { isAuthenticated, isExplorer, loginAsExplorer, openAccessModal } = useAuth()
   const location = useLocation()
   const initialTopicFromNav = (location.state as { initialTopic?: string } | null)?.initialTopic
 
@@ -268,8 +269,8 @@ export function Panel() {
     return map
   }, [notes])
 
-  // If not authenticated, show guarded screen
-  if (!isAuthenticated) {
+  // If neither authenticated as admin nor explorer, show guarded screen
+  if (!isAuthenticated && !isExplorer) {
     return (
       <div className="panel-page-locked">
         <Header />
@@ -280,14 +281,28 @@ export function Panel() {
               <Lock size={36} />
             </div>
             <h2>Panel de Notas Protegido</h2>
-            <p>Debes ingresar la contraseña de acceso para ver y editar tus notas de C#.</p>
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => openAccessModal()}
-            >
-              Ingresar Contraseña
-            </button>
+            <p>
+              Puedes ingresar como explorador para consultar todos los apuntes en modo lectura,
+              o ingresar con clave de administrador para crear y editar.
+            </p>
+            <div className="locked-btn-group">
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => loginAsExplorer()}
+              >
+                <Compass size={16} />
+                <span>Entrar como Explorador</span>
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => openAccessModal()}
+              >
+                <Lock size={15} />
+                <span>Ingresar con Clave</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -297,8 +312,8 @@ export function Panel() {
   return (
     <div className="panel-page">
       <Header
-        onOpenCreateNote={handleOpenCreate}
-        onOpenCreateTopic={() => setIsTopicModalOpen(true)}
+        onOpenCreateNote={!isExplorer ? handleOpenCreate : undefined}
+        onOpenCreateTopic={!isExplorer ? () => setIsTopicModalOpen(true) : undefined}
       />
 
       {/* Fondo /saku.png con overlay nítido */}
@@ -338,22 +353,43 @@ export function Panel() {
                 )}
                 <span>{cloudStatus.isConnected ? 'Nube Conectada' : 'Modo Local'}</span>
               </button>
-              <button
-                type="button"
-                className="btn-create-topic"
-                onClick={() => setIsTopicModalOpen(true)}
-              >
-                <FolderPlus size={16} />
-                <span>Nuevo Tema</span>
-              </button>
-              <button
-                type="button"
-                className="btn-create-note"
-                onClick={handleOpenCreate}
-              >
-                <Plus size={18} />
-                <span>Nueva Nota</span>
-              </button>
+
+              {!isExplorer ? (
+                <>
+                  <button
+                    type="button"
+                    className="btn-create-topic"
+                    onClick={() => setIsTopicModalOpen(true)}
+                  >
+                    <FolderPlus size={16} />
+                    <span>Nuevo Tema</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-create-note"
+                    onClick={handleOpenCreate}
+                  >
+                    <Plus size={18} />
+                    <span>Nueva Nota</span>
+                  </button>
+                </>
+              ) : (
+                <div className="explorer-controls-wrap">
+                  <span className="explorer-status-badge">
+                    <Compass size={14} />
+                    <span>Modo Explorador (Lectura)</span>
+                  </span>
+                  <button
+                    type="button"
+                    className="btn-unlock-admin"
+                    onClick={() => openAccessModal()}
+                    title="Desbloquear modo edición con contraseña"
+                  >
+                    <Lock size={14} />
+                    <span>Desbloquear Edición</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -409,15 +445,17 @@ export function Panel() {
               <div>
                 <div className="topic-banner-title-row">
                   <h2 className="current-topic-title">{currentTopic.name}</h2>
-                  <button
-                    type="button"
-                    className="btn-delete-topic-inline"
-                    onClick={() => setTopicToDelete(currentTopic)}
-                    title="Eliminar este tema y sus notas"
-                  >
-                    <Trash2 size={14} />
-                    <span>Eliminar Tema</span>
-                  </button>
+                  {!isExplorer && (
+                    <button
+                      type="button"
+                      className="btn-delete-topic-inline"
+                      onClick={() => setTopicToDelete(currentTopic)}
+                      title="Eliminar este tema y sus notas"
+                    >
+                      <Trash2 size={14} />
+                      <span>Eliminar Tema</span>
+                    </button>
+                  )}
                 </div>
                 <p className="current-topic-desc">{currentTopic.description}</p>
               </div>
@@ -508,6 +546,7 @@ export function Panel() {
                     key={note.id}
                     note={note}
                     topic={topic}
+                    isExplorer={isExplorer}
                     onToggleHighlight={handleToggleHighlight}
                     onEditNote={handleOpenEdit}
                     onDeleteNote={handleRequestDelete}
@@ -525,16 +564,18 @@ export function Panel() {
               <p className="empty-desc">
                 {searchQuery || priorityFilter !== 'all' || onlyHighlighted
                   ? 'Prueba modificando tus filtros o el término de búsqueda.'
-                  : 'Aún no tienes notas en este tema. ¡Crea la primera para comenzar!'}
+                  : 'Aún no hay notas en este tema.'}
               </p>
-              <button
-                type="button"
-                className="btn-create-note"
-                onClick={handleOpenCreate}
-              >
-                <Plus size={16} />
-                <span>Crear Nota Ahora</span>
-              </button>
+              {!isExplorer && (
+                <button
+                  type="button"
+                  className="btn-create-note"
+                  onClick={handleOpenCreate}
+                >
+                  <Plus size={16} />
+                  <span>Crear Nota Ahora</span>
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -545,6 +586,7 @@ export function Panel() {
         isOpen={Boolean(detailNote)}
         note={detailNote}
         topic={topics.find((t) => t.id === detailNote?.topicId)}
+        isExplorer={isExplorer}
         onClose={() => setDetailNote(null)}
         onEdit={handleOpenEdit}
         onToggleHighlight={handleToggleHighlight}

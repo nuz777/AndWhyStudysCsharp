@@ -20,6 +20,7 @@ interface NoteDetailModalProps {
   isOpen: boolean
   note: Note | null
   topic?: Topic
+  isExplorer?: boolean
   onClose: () => void
   onEdit: (note: Note) => void
   onToggleHighlight: (id: string) => void
@@ -29,6 +30,7 @@ export function NoteDetailModal({
   isOpen,
   note,
   topic,
+  isExplorer = false,
   onClose,
   onEdit,
   onToggleHighlight
@@ -208,30 +210,41 @@ export function NoteDetailModal({
         {/* Barra de Acciones Inferior Estilo Windows */}
         <div className="windows-statusbar">
           <div className="windows-status-left">
-            <button
-              type="button"
-              className={`detail-action-btn detail-btn-highlight ${note.isHighlighted ? 'active' : ''}`}
-              onClick={() => onToggleHighlight(note.id)}
-              title={note.isHighlighted ? 'Quitar resalte de la nota' : 'Resaltar esta nota'}
-            >
-              <Sparkles size={15} />
-              <span>{note.isHighlighted ? 'Nota Resaltada' : 'Resaltar Nota'}</span>
-            </button>
+            {!isExplorer ? (
+              <button
+                type="button"
+                className={`detail-action-btn detail-btn-highlight ${note.isHighlighted ? 'active' : ''}`}
+                onClick={() => onToggleHighlight(note.id)}
+                title={note.isHighlighted ? 'Quitar resalte de la nota' : 'Resaltar esta nota'}
+              >
+                <Sparkles size={15} />
+                <span>{note.isHighlighted ? 'Nota Resaltada' : 'Resaltar Nota'}</span>
+              </button>
+            ) : (
+              note.isHighlighted && (
+                <span className="detail-action-btn detail-btn-highlight active" title="Nota destacada">
+                  <Sparkles size={15} />
+                  <span>Nota Destacada</span>
+                </span>
+              )
+            )}
           </div>
 
           <div className="windows-status-right">
-            <button
-              type="button"
-              className="detail-action-btn detail-btn-edit"
-              onClick={() => {
-                handleClose()
-                onEdit(note)
-              }}
-              title="Editar esta nota"
-            >
-              <Pencil size={15} />
-              <span>Editar Nota</span>
-            </button>
+            {!isExplorer && (
+              <button
+                type="button"
+                className="detail-action-btn detail-btn-edit"
+                onClick={() => {
+                  handleClose()
+                  onEdit(note)
+                }}
+                title="Editar esta nota"
+              >
+                <Pencil size={15} />
+                <span>Editar Nota</span>
+              </button>
+            )}
 
             <button
               type="button"

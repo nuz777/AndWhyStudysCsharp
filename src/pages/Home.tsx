@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import {
-  BookOpen,
   ArrowRight,
   Sparkles,
   BrickWall,
@@ -9,16 +8,27 @@ import {
   Lock,
   Terminal,
   Layers,
-  Zap
+  Zap,
+  Compass
 } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
 import { Header } from '../components/Header'
 
 export function Home() {
-  const { isAuthenticated, openAccessModal } = useAuth()
+  const { isAuthenticated, isExplorer, loginAsExplorer, openAccessModal } = useAuth()
   const navigate = useNavigate()
 
-  const handleEnter = (topicId?: string) => {
+  // Entrar directamente como explorador (sin contraseña)
+  const handleEnterExplorer = (topicId?: string) => {
+    const targetState = topicId ? { initialTopic: topicId } : undefined
+    if (!isAuthenticated && !isExplorer) {
+      loginAsExplorer()
+    }
+    navigate('/panel', { state: targetState })
+  }
+
+  // Entrar con contraseña de administrador
+  const handleEnterAdmin = (topicId?: string) => {
     const targetState = topicId ? { initialTopic: topicId } : undefined
     if (isAuthenticated) {
       navigate('/panel', { state: targetState })
@@ -58,9 +68,9 @@ export function Home() {
             <button
               type="button"
               className="btn-hero-primary"
-              onClick={() => handleEnter()}
+              onClick={() => handleEnterExplorer()}
             >
-              <BookOpen size={18} />
+              <Compass size={18} />
               <span>Explorar Apuntes</span>
               <ArrowRight size={16} />
             </button>
@@ -69,10 +79,10 @@ export function Home() {
               <button
                 type="button"
                 className="btn-hero-secondary"
-                onClick={() => handleEnter()}
+                onClick={() => handleEnterAdmin()}
               >
                 <Lock size={16} />
-                <span>Acceso con Clave</span>
+                <span>Acceso Administrador</span>
               </button>
             )}
           </div>
@@ -96,7 +106,7 @@ export function Home() {
         <div className="hero-cards-grid" id="temas">
           <div
             className="topic-card clickable-card"
-            onClick={() => handleEnter('fundamentos')}
+            onClick={() => handleEnterExplorer('fundamentos')}
           >
             <div className="card-icon-wrap card-icon-purple">
               <Terminal size={22} />
@@ -112,7 +122,7 @@ export function Home() {
 
           <div
             className="topic-card clickable-card"
-            onClick={() => handleEnter('poo-solid')}
+            onClick={() => handleEnterExplorer('poo-solid')}
           >
             <div className="card-icon-wrap card-icon-blue">
               <Layers size={22} />
@@ -128,7 +138,7 @@ export function Home() {
 
           <div
             className="topic-card clickable-card"
-            onClick={() => handleEnter('linq-async')}
+            onClick={() => handleEnterExplorer('linq-async')}
           >
             <div className="card-icon-wrap card-icon-amber">
               <Zap size={22} />

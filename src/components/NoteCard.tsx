@@ -9,6 +9,7 @@ import { PriorityBadge } from './PriorityBadge'
 interface NoteCardProps {
   note: Note
   topic?: Topic
+  isExplorer?: boolean
   onToggleHighlight: (id: string) => void
   onEditNote: (note: Note) => void
   onDeleteNote: (note: Note) => void
@@ -18,6 +19,7 @@ interface NoteCardProps {
 export function NoteCard({
   note,
   topic,
+  isExplorer = false,
   onToggleHighlight,
   onEditNote,
   onDeleteNote,
@@ -45,42 +47,53 @@ export function NoteCard({
         <PriorityBadge priority={note.priority} size="sm" />
 
         <div className="note-card-actions" onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            className={`action-btn highlight-btn ${note.isHighlighted ? 'active' : ''}`}
-            onClick={(e) => {
-              e.stopPropagation()
-              onToggleHighlight(note.id)
-            }}
-            title={note.isHighlighted ? 'Quitar resalte' : 'Resaltar nota'}
-          >
-            <Sparkles size={14} />
-            <span>{note.isHighlighted ? 'Resaltada' : 'Resaltar'}</span>
-          </button>
+          {!isExplorer ? (
+            <>
+              <button
+                type="button"
+                className={`action-btn highlight-btn ${note.isHighlighted ? 'active' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onToggleHighlight(note.id)
+                }}
+                title={note.isHighlighted ? 'Quitar resalte' : 'Resaltar nota'}
+              >
+                <Sparkles size={14} />
+                <span>{note.isHighlighted ? 'Resaltada' : 'Resaltar'}</span>
+              </button>
 
-          <button
-            type="button"
-            className="action-btn edit-btn"
-            onClick={(e) => {
-              e.stopPropagation()
-              onEditNote(note)
-            }}
-            title="Editar nota"
-          >
-            <Pencil size={14} />
-          </button>
+              <button
+                type="button"
+                className="action-btn edit-btn"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onEditNote(note)
+                }}
+                title="Editar nota"
+              >
+                <Pencil size={14} />
+              </button>
 
-          <button
-            type="button"
-            className="action-btn delete-btn"
-            onClick={(e) => {
-              e.stopPropagation()
-              onDeleteNote(note)
-            }}
-            title="Eliminar nota"
-          >
-            <Trash2 size={14} />
-          </button>
+              <button
+                type="button"
+                className="action-btn delete-btn"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDeleteNote(note)
+                }}
+                title="Eliminar nota"
+              >
+                <Trash2 size={14} />
+              </button>
+            </>
+          ) : (
+            note.isHighlighted && (
+              <span className="action-btn highlight-btn active" title="Nota destacada">
+                <Sparkles size={14} />
+                <span>Destacada</span>
+              </span>
+            )
+          )}
         </div>
       </div>
 

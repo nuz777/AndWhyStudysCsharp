@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Lock, Eye, EyeOff, ShieldCheck, X } from 'lucide-react'
+import { Lock, Eye, EyeOff, ShieldCheck, X, Compass } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
 
 export function AccessModal() {
-  const { isAccessModalOpen, closeAccessModal, login } = useAuth()
+  const { isAccessModalOpen, closeAccessModal, login, loginAsExplorer } = useAuth()
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState(false)
@@ -27,6 +27,12 @@ export function AccessModal() {
     }
   }
 
+  const handleExplorer = () => {
+    loginAsExplorer()
+    setPassword('')
+    setError(false)
+  }
+
   return (
     <div className="modal-backdrop" onClick={handleClose}>
       <div
@@ -39,8 +45,8 @@ export function AccessModal() {
               <Lock size={22} />
             </div>
             <div>
-              <h2 className="modal-title">Acceso Protegido</h2>
-              <p className="modal-subtitle">Ingresa la clave para acceder al panel de notas</p>
+              <h2 className="modal-title">Acceso al Cuaderno</h2>
+              <p className="modal-subtitle">Ingresa la clave de administrador o entra como explorador</p>
             </div>
           </div>
           <button type="button" className="close-btn" onClick={handleClose}>
@@ -50,7 +56,7 @@ export function AccessModal() {
 
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-group">
-            <label htmlFor="access-pwd">Contraseña de Acceso</label>
+            <label htmlFor="access-pwd">Contraseña de Administrador</label>
             <div className="password-input-wrap">
               <input
                 id="access-pwd"
@@ -79,7 +85,7 @@ export function AccessModal() {
 
           <div className="access-hint-box">
             <ShieldCheck size={16} />
-            <span>Tus apuntes de C# están protegidos contra accesos no autorizados.</span>
+            <span>Acceso total para crear, editar y eliminar notas y temas.</span>
           </div>
 
           <div className="modal-actions">
@@ -87,10 +93,28 @@ export function AccessModal() {
               Cancelar
             </button>
             <button type="submit" className="btn-primary-modal">
-              Desbloquear e Ingresar
+              Acceso Administrador
             </button>
           </div>
         </form>
+
+        <div className="access-divider">
+          <span>o entra sin clave</span>
+        </div>
+
+        <div className="explorer-option-wrap">
+          <button
+            type="button"
+            className="btn-enter-explorer"
+            onClick={handleExplorer}
+          >
+            <Compass size={17} />
+            <div className="explorer-btn-text">
+              <strong>Entrar como Explorador</strong>
+              <small>Consulta y lee todos los apuntes sin editar</small>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   )

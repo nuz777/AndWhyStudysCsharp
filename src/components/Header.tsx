@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 export function Header({ onOpenCreateNote, onOpenCreateTopic }: HeaderProps) {
-  const { isAuthenticated, logout, openAccessModal } = useAuth()
+  const { isAuthenticated, isExplorer, logout, openAccessModal } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const isPanel = location.pathname.startsWith('/panel')
@@ -17,7 +17,7 @@ export function Header({ onOpenCreateNote, onOpenCreateTopic }: HeaderProps) {
   const [isHeaderHidden, setIsHeaderHidden] = useState(false)
 
   const handleAccess = () => {
-    if (isAuthenticated) {
+    if (isAuthenticated || isExplorer) {
       navigate('/panel')
     } else {
       openAccessModal(() => {
@@ -68,16 +68,18 @@ export function Header({ onOpenCreateNote, onOpenCreateTopic }: HeaderProps) {
               </li>
               {isPanel ? (
                 <>
-                  <li>
-                    <button
-                      type="button"
-                      className="nav-link-btn"
-                      onClick={onOpenCreateTopic}
-                    >
-                      <FolderPlus size={14} />
-                      <span>Nuevo Tema</span>
-                    </button>
-                  </li>
+                  {!isExplorer && onOpenCreateTopic && (
+                    <li>
+                      <button
+                        type="button"
+                        className="nav-link-btn"
+                        onClick={onOpenCreateTopic}
+                      >
+                        <FolderPlus size={14} />
+                        <span>Nuevo Tema</span>
+                      </button>
+                    </li>
+                  )}
                 </>
               ) : (
                 <li>
@@ -107,7 +109,8 @@ export function Header({ onOpenCreateNote, onOpenCreateTopic }: HeaderProps) {
 
             {isPanel ? (
               <>
-                {onOpenCreateNote && (
+                {/* Solo administradores pueden agregar notas */}
+                {!isExplorer && onOpenCreateNote && (
                   <button
                     className="btn-primary"
                     type="button"
@@ -118,19 +121,33 @@ export function Header({ onOpenCreateNote, onOpenCreateTopic }: HeaderProps) {
                     <span className="header-btn-text">Nueva Nota</span>
                   </button>
                 )}
+
+                {/* Si está en modo explorador, botón para desbloquear con clave */}
+                {isExplorer && (
+                  <button
+                    type="button"
+                    className="btn-header-admin"
+                    onClick={() => openAccessModal()}
+                    title="Ingresar contraseña de administrador para editar"
+                  >
+                    <Lock size={14} />
+                    <span className="header-btn-text">Admin</span>
+                  </button>
+                )}
+
                 <button
                   type="button"
                   className="btn-lock-status logout"
                   onClick={handleLogout}
-                  title="Cerrar sesión y bloquear panel"
+                  title={isExplorer ? 'Salir del modo explorador' : 'Cerrar sesión y bloquear panel'}
                 >
                   <LogOut size={15} />
-                  <span className="header-btn-text">Bloquear</span>
+                  <span className="header-btn-text">{isExplorer ? 'Salir' : 'Bloquear'}</span>
                 </button>
               </>
             ) : (
               <>
-                {isAuthenticated ? (
+                {isAuthenticated || isExplorer ? (
                   <button
                     type="button"
                     className="btn-primary"
